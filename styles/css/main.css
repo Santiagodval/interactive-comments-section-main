@@ -1,0 +1,25 @@
+.commentHeader {
+  display: flex;
+}
+.commentHeader .commentData {
+  display: flex;
+}
+.commentHeader img {
+  width: 35px;
+}
+
+.comment {
+  padding: 1rem;
+  margin: 1rem;
+  background-color: hsl(228deg, 33%, 97%);
+  border-radius: 7px;
+}
+
+body {
+  background-color: hsl(223deg, 19%, 93%);
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
