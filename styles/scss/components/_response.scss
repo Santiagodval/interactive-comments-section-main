@@ -1,6 +1,6 @@
 @use "../utilities/variables" as *;
 
-.comment{
+.response{
     padding: 1rem;
     margin: 1rem;
 
@@ -11,8 +11,6 @@
     //grid
 
     display: grid;
-
-    grid-template-columns: repeat(3, 1fr);
 
     grid-template-areas: 
     "commentHeader commentHeader commentHeader"

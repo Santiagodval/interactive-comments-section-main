@@ -1,0 +1,7 @@
+@use "../utilities/variables" as *;
+
+.responses{
+    grid-area: responses;
+
+    border-left: 1px solid $Light-grayish-blue;
+}

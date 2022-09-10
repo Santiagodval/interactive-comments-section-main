@@ -28,14 +28,10 @@ function generateHTML() {
         </section>
 
         <div class='buttons'>
-                <button>
-                    <img src='images/icon-delete.svg'>
-                    delete
-                </button>
-
-                <button>
+                ${JSON.parse(storage.comments).currentUser.username === element.user.username ? '<button class="delete"><img src="images/icon-delete.svg">Delete</button>' : ""}
+                <button class='reply'>
                     <img src='images/icon-reply.svg'>
-                    reply
+                    Reply
                 </button>
             
             </div>
@@ -54,11 +50,18 @@ function generateHTML() {
             ${generateResponses(element.replies)}
         </div>
         </section>
-
-
         `;
     });
 
+    chatSection.innerHTML = chatSection.innerHTML +` 
+        <section class="textEntry">
+        <input placeholder='Add a comment...' type='textfield'></input>
+        <div class='textEntryUserThings'>
+        <img src='${JSON.parse(storage.comments).currentUser.image.png}'></img>
+        <button class='sendButton'>Send</button>
+        </div>
+        </section>
+    `
     
     //    console.log(chatSection.innerHTML);
 }
@@ -76,20 +79,18 @@ function generateResponses(replies){
             <div class='commentData'>
                 <img src=${element.user.image.png}>
                 <h4 class='name'>${element.user.username}</h4>
+                ${JSON.parse(storage.comments).currentUser.username === element.user.username ? '<p class="youTag">you</p>' : ""}
                 <p>${element.createdAt}</p>
             </div>
 
         </section>
 
         <div class='buttons'>
-                <button>
-                    <img src='images/icon-delete.svg'>
-                    delete
-                </button>
+                ${JSON.parse(storage.comments).currentUser.username === element.user.username ? '<button class="delete"><img src="images/icon-delete.svg">Delete</button>' : ""}
 
-                <button>
+                <button class='reply'>
                     <img src='images/icon-reply.svg'>
-                    reply
+                    Reply
                 </button>
             
             </div>
@@ -101,7 +102,7 @@ function generateResponses(replies){
             </div>
 
         <section class='commentTextSection'>
-            <p class='commentTextContent'><strong>${element.replyingTo}</strong>${element.content}</p>
+            <p class='commentTextContent'><strong>@${element.replyingTo} </strong>${element.content}</p>
         </section>
         </div>
     `})
@@ -109,3 +110,5 @@ function generateResponses(replies){
     return string;
     
 }
+
+function deleteButton(){}

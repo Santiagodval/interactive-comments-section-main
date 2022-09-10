@@ -1,0 +1,29 @@
+@use "../utilities/variables" as *;
+
+.buttons{
+    grid-area: buttons;
+
+    display: flex;
+
+    justify-content: right;
+
+    .delete{
+        color: $Soft-Red;
+    }
+
+    .reply{
+        color: $Moderate-blue;
+    }
+
+    button{
+        display: flex;
+        align-items: center;
+
+        padding: 4px;
+
+        font-size: 18px;
+        
+        border: 0ch;
+        background-color: $Very-light-gray;
+    }
+}

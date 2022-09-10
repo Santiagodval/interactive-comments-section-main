@@ -1,0 +1,14 @@
+@use "../utilities/variables" as *;
+
+.commentTextSection{
+    grid-area: commentContent;
+
+    opacity: 60%;
+    p{
+        strong{
+            font-weight: 700;
+            color: $Moderate-blue;
+        }
+    }
+    
+}

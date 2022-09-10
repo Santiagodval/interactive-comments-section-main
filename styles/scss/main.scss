@@ -2,8 +2,21 @@
 @use "components/comment";
 @use "components/comments";
 @use "components/body";
+@use "components/scoreCounter";
+@use "components/buttons";
+@use "components/responses";
+@use "components/response";
+@use "components/commentTextSection";
+@use "components/textEntry";
 
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap');
 *{
     padding: 0;
     margin: 0;
+
+    font-family: "Rubik";
+}
+
+p{
+    font-size: 16px;
 }

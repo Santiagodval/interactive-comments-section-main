@@ -1,0 +1,32 @@
+@use "../utilities/variables" as *;
+
+.scoreCounter{
+    background-color: $Light-gray;
+
+    display: flex;
+    align-items: center;
+
+    border-radius: 10px;
+
+    width: fit-content;
+
+    padding: 7px 10px 7px 10px;
+
+    color: $Moderate-blue;
+
+    grid-area: scoreCounter;
+
+    button{
+
+        &:nth-child(1){
+            margin-right: 8px;
+        }
+
+        &:nth-child(2){
+            margin-left: 8px;
+        }
+
+
+        border: 0px;
+    }
+}
