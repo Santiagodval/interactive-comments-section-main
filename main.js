@@ -1,12 +1,14 @@
 var storage = localStorage;
 storage.length === 0 ? starter() : generateHTML();
 
+
+
 function starter() {
     fetch('./data.json')
         .then((response) => response.json())
         .then((json) => {
             //sets the comments key of the local storage to the json parameters
-            storage.setItem("comments", JSON.stringify(json));
+            storage.setItem("comments", JSON.stringify(json));            
             console.log(json);
             //logs the object in the comments key
             console.log(JSON.parse(storage.getItem('comments')));
@@ -15,6 +17,10 @@ function starter() {
 
 function generateHTML() {
     const chatSection = document.getElementById("comments");
+
+    chatSection.innerHTML = "";
+
+    console.log("genero HTML")
 
     JSON.parse(storage.comments).comments.forEach(element => {
         chatSection.innerHTML = chatSection.innerHTML + `<section class='comment'>
@@ -55,13 +61,14 @@ function generateHTML() {
 
     chatSection.innerHTML = chatSection.innerHTML +` 
         <section class="textEntry">
-        <input placeholder='Add a comment...' type='textfield'></input>
+        <input id='textfieldEntry' placeholder='Add a comment...' type='textfield'></input>
         <div class='textEntryUserThings'>
         <img src='${JSON.parse(storage.comments).currentUser.image.png}'></img>
-        <button class='sendButton'>Send</button>
+        <button class='sendButton' id='sendButton'>Send</button>
         </div>
         </section>
     `
+    document.getElementById("sendButton").addEventListener("click", addComment);
     
     //    console.log(chatSection.innerHTML);
 }
@@ -70,8 +77,6 @@ function generateResponses(replies){
 
     let string = "";
     replies.forEach(element => {
-                
-        console.log(element);
 
         string = string + `
         <div class='response'>
@@ -112,3 +117,35 @@ function generateResponses(replies){
 }
 
 function deleteButton(){}
+
+function addComment(){
+
+    console.log(storage);
+
+    var parsedStorage = JSON.parse(storage.comments);
+
+    var existingComments = parsedStorage.comments;
+
+    existingComments.push({
+        id:JSON.parse(storage.comments).meta.commentNumber + 1,
+        content: document.getElementById("textfieldEntry").value,
+        createdAt:"seconds ago",
+        score: 0,
+        user : {
+           image: {
+                png: JSON.parse(storage.comments).currentUser.image.png,
+                webp: JSON.parse(storage.comments).currentUser.image.webp
+           },
+           username: JSON.parse(storage.comments).currentUser.username     
+        },
+        replies: []
+    })
+
+    parsedStorage.comments = existingComments;
+
+    storage.setItem("comments", JSON.stringify(parsedStorage));
+
+    console.log(storage);
+
+    generateHTML();
+}
