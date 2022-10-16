@@ -1,9 +1,16 @@
 var storage = localStorage;
-storage.length === 0 ? starter() : generateHTML();
+storage.length === 0 ? new Promise(resolve => {
+    setTimeout(() => {
+      resolve(starter());
+    }, 500);
+}) : 
+    new Promise(resolve => {
+    setTimeout(() => {
+      resolve(generateHTML());
+    }, 500);
+});
 
-
-
-function starter() {
+const starter = () => {
     fetch('./data.json')
         .then((response) => response.json())
         .then((json) => {
@@ -15,15 +22,16 @@ function starter() {
         });
 }
 
-function generateHTML() {
-    const chatSection = document.getElementById("comments");
+const generateHTML = () => {
+    let chatSection = document.getElementById("comments");
 
     chatSection.innerHTML = "";
 
     console.log("genero HTML")
 
     JSON.parse(storage.comments).comments.forEach(element => {
-        chatSection.innerHTML = chatSection.innerHTML + `<section class='comment'>
+        chatSection.innerHTML = chatSection.innerHTML + `<section class='comment' 
+        id="${element.id}">
         <section class='commentHeader'>
             <div class='commentData'>
                 <img src=${element.user.image.png}>
@@ -34,8 +42,8 @@ function generateHTML() {
         </section>
 
         <div class='buttons'>
-                ${JSON.parse(storage.comments).currentUser.username === element.user.username ? '<button class="delete"><img src="images/icon-delete.svg">Delete</button>' : ""}
-                <button class='reply'>
+                ${JSON.parse(storage.comments).currentUser.username === element.user.username ? `<button id="delete${element.id}" class="delete"><img src="images/icon-delete.svg">Delete</button>` : ""}
+                <button id="reply${element.id}" class='reply'>
                     <img src='images/icon-reply.svg'>
                     Reply
                 </button>
@@ -57,7 +65,7 @@ function generateHTML() {
         </div>
         </section>
         `;
-    });
+        });
 
     chatSection.innerHTML = chatSection.innerHTML +` 
         <section class="textEntry">
@@ -69,17 +77,18 @@ function generateHTML() {
         </section>
     `
     document.getElementById("sendButton").addEventListener("click", addComment);
+    createListeners();
     
     //    console.log(chatSection.innerHTML);
 }
 
-function generateResponses(replies){
+const generateResponses = (replies) => {
 
     let string = "";
     replies.forEach(element => {
 
         string = string + `
-        <div class='response'>
+        <div id=${element.id} class='response'>
         <section class='commentHeader'>
             <div class='commentData'>
                 <img src=${element.user.image.png}>
@@ -91,9 +100,9 @@ function generateResponses(replies){
         </section>
 
         <div class='buttons'>
-                ${JSON.parse(storage.comments).currentUser.username === element.user.username ? '<button class="delete"><img src="images/icon-delete.svg">Delete</button>' : ""}
+                ${JSON.parse(storage.comments).currentUser.username === element.user.username ? `<button id="delete${element.id}" class="delete"><img src="images/icon-delete.svg">Delete</button>` : ""}
 
-                <button class='reply'>
+                <button id="reply${element.id}" class='reply'>
                     <img src='images/icon-reply.svg'>
                     Reply
                 </button>
@@ -110,21 +119,21 @@ function generateResponses(replies){
             <p class='commentTextContent'><strong>@${element.replyingTo} </strong>${element.content}</p>
         </section>
         </div>
-    `})
+    `
+        
+})
 
     return string;
     
 }
 
-function deleteButton(){}
-
-function addComment(){
+const addComment = () => {
 
     console.log(storage);
 
     var parsedStorage = JSON.parse(storage.comments);
-
     var existingComments = parsedStorage.comments;
+    parsedStorage.meta.commentNumber = parsedStorage.meta.commentNumber +1; 
 
     existingComments.push({
         id:JSON.parse(storage.comments).meta.commentNumber + 1,
@@ -145,7 +154,45 @@ function addComment(){
 
     storage.setItem("comments", JSON.stringify(parsedStorage));
 
-    console.log(storage);
-
     generateHTML();
+}
+
+const createListeners = () => {
+    JSON.parse(storage.comments).comments.forEach(element => {
+        if(element.replies.length){
+            element.replies.forEach(element2 => {
+                document.getElementById(`delete${element2.id}`) ? document.getElementById(`delete${element2.id}`).addEventListener("click", deleteComment) : null;
+                document.getElementById(`reply${element2.id}`) ? document.getElementById(`reply${element2.id}`).addEventListener("click", replyComment) : null;
+            })
+        }
+        console.log(document.getElementById(`delete${element.id}`))
+        document.getElementById(`delete${element.id}`) ? document.getElementById(`delete${element.id}`).addEventListener("click", deleteComment) : null;
+        document.getElementById(`reply${element.id}`) ? document.getElementById(`reply${element.id}`).addEventListener("click", replyComment) : null;
+    })
+}
+
+const deleteComment = (e) => {
+    let i = 0;
+    parsedStorage = JSON.parse(storage.comments)
+    parsedStorage.comments.forEach(element => {
+        "delete" + element.id === e.target.id ? parsedStorage.comments.splice(i,1) : null;
+        if(element.replies.length){
+            let r = 0;
+            console.log(parsedStorage.comments[i].replies)
+            element.replies.forEach(element2 => {
+                "delete"+element2.id === e.target.id ? parsedStorage.comments[i].replies.splice(r,1) : null;
+                r++;
+            })
+            
+        }
+        i++;
+    });
+
+    storage.setItem("comments", JSON.stringify(parsedStorage));
+    generateHTML();
+    
+}
+
+const replyComment = (e) => {
+    console.log(e.target.id);
 }
