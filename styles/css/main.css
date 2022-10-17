@@ -28,11 +28,7 @@
   border-radius: 7px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-areas: "commentHeader commentHeader commentHeader" "commentContent commentContent commentContent" "scoreCounter buttons buttons" "responses responses responses";
-}
-
-.comments {
-  display: grid;
+  grid-template-areas: "commentHeader commentHeader commentHeader" "commentContent commentContent commentContent" "scoreCounter buttons buttons" "responseEntry responseEntry responseEntry" "responses responses responses";
 }
 
 body {
@@ -90,7 +86,7 @@ body {
   background-color: hsl(228deg, 33%, 97%);
   border-radius: 7px;
   display: grid;
-  grid-template-areas: "commentHeader commentHeader commentHeader" "commentContent commentContent commentContent" "scoreCounter buttons buttons" "responses responses responses";
+  grid-template-areas: "commentHeader commentHeader commentHeader" "commentContent commentContent commentContent" "scoreCounter buttons buttons" "responseEntry responseEntry responseEntry" "responses responses responses";
 }
 
 .commentTextSection {
@@ -105,6 +101,7 @@ body {
 .textEntry {
   padding: 1rem;
   margin: 1rem;
+  grid-area: responseEntry;
   background-color: hsl(228deg, 33%, 97%);
   border-radius: 7px;
 }

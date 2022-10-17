@@ -118,6 +118,9 @@ const generateResponses = (replies) => {
         <section class='commentTextSection'>
             <p class='commentTextContent'><strong>@${element.replyingTo} </strong>${element.content}</p>
         </section>
+        <div class='responses'>
+            ${generateResponses(element.replies)}
+        </div>
         </div>
     `
         
@@ -163,9 +166,10 @@ const createListeners = () => {
             element.replies.forEach(element2 => {
                 document.getElementById(`delete${element2.id}`) ? document.getElementById(`delete${element2.id}`).addEventListener("click", deleteComment) : null;
                 document.getElementById(`reply${element2.id}`) ? document.getElementById(`reply${element2.id}`).addEventListener("click", replyComment) : null;
+
+                element2.replies.length ? createListeners() : null;
             })
         }
-        console.log(document.getElementById(`delete${element.id}`))
         document.getElementById(`delete${element.id}`) ? document.getElementById(`delete${element.id}`).addEventListener("click", deleteComment) : null;
         document.getElementById(`reply${element.id}`) ? document.getElementById(`reply${element.id}`).addEventListener("click", replyComment) : null;
     })
@@ -173,12 +177,11 @@ const createListeners = () => {
 
 const deleteComment = (e) => {
     let i = 0;
-    parsedStorage = JSON.parse(storage.comments)
+    let parsedStorage = JSON.parse(storage.comments)
     parsedStorage.comments.forEach(element => {
         "delete" + element.id === e.target.id ? parsedStorage.comments.splice(i,1) : null;
         if(element.replies.length){
             let r = 0;
-            console.log(parsedStorage.comments[i].replies)
             element.replies.forEach(element2 => {
                 "delete"+element2.id === e.target.id ? parsedStorage.comments[i].replies.splice(r,1) : null;
                 r++;
@@ -194,5 +197,117 @@ const deleteComment = (e) => {
 }
 
 const replyComment = (e) => {
-    console.log(e.target.id);
+    let i = 1;
+    let parsedStorage = JSON.parse(storage.comments);
+    let id = null;
+
+//    parsedStorage.comments[e.target.id.splice(5,e.target.id.length-5)] any way to directly find the comment without go throughout all the array?
+    parsedStorage.comments.forEach(element => {
+        "reply" + element.id === e.target.id ? id=i : null;
+        // parsedStorage.comments[i].replies.push(getReply())
+        if(element.replies.length){
+            element.replies.forEach(element2 => {
+                i++;
+                "reply" + element2.id === e.target.id ? id=i : null;
+            })
+        }
+        
+        i++;
+    })
+    addReplyEdit(id);
+    parsedStorage.comments
+}
+
+const addReplyEdit = (id) => {
+    document.getElementById(id).innerHTML = document.getElementById(id).innerHTML +` 
+        <section class="textEntry Replay">
+        <input id='textfieldEntry${id}' placeholder='Add a comment...' type='textfield'></input>
+        <div class='textEntryUserThings'>
+        <img src='${JSON.parse(storage.comments).currentUser.image.png}'></img>
+        <button class='sendButton' id='sendButton${id}'>Send</button>
+        </div>
+        </section>
+        `;
+
+    document.getElementById("sendButton"+id).addEventListener("click", addReply);
+}
+
+const addReply = (e) => {
+    let parsedStorage = JSON.parse(localStorage.comments);
+
+    id = parseInt(e.target.id.slice(10));
+
+    console.log(id);
+    let i = 1;
+    parsedStorage.comments.forEach(element => {
+        element.id === id ? parsedStorage.comments[i-1].replies.push({
+            id:JSON.parse(storage.comments).meta.commentNumber + 1,
+            content: document.getElementById(`textfieldEntry${id}`).value,
+            createdAt:"seconds ago",
+            score: 0,
+            replyingTo: element.user.username,
+            user : {
+               image: {
+                    png: JSON.parse(storage.comments).currentUser.image.png,
+                    webp: JSON.parse(storage.comments).currentUser.image.webp
+               },
+               username: JSON.parse(storage.comments).currentUser.username     
+            },
+            replies: []
+        }) : null;
+
+
+        if(element.replies.length){
+            let r = 1;
+            element.replies.forEach(element2 =>{
+                console.log(element2.replies)
+                element2.replies ? functionalResponse(r, parsedStorage, element2) : null;
+                element2.id === id ? parsedStorage.comments[i-1].replies[r-1].replies.push({
+                    id:JSON.parse(storage.comments).meta.commentNumber + 1,
+                    content: document.getElementById(`textfieldEntry${id}`).value,
+                    createdAt:"seconds ago",
+                    score: 0,
+                    replyingTo: element.user.username,
+                    user : {
+                       image: {
+                            png: JSON.parse(storage.comments).currentUser.image.png,
+                            webp: JSON.parse(storage.comments).currentUser.image.webp
+                       },
+                       username: JSON.parse(storage.comments).currentUser.username     
+                    },
+                    replies: []
+                }) : null;
+                r++;
+            })
+            
+        }
+        i++;
+
+    })
+    storage.setItem("comments", JSON.stringify(parsedStorage));
+    generateHTML();
+}
+
+const functionalResponse = (i, parsedStorage, element) => {
+        let r = 1;
+            element.replies.forEach(element2 =>{
+
+                element2.replies ? functionalResponse(r, parsedStorage, element2) : null;
+                element2.id === id ? parsedStorage.comments[i-1].replies[r-1].replies.push({
+                    id:JSON.parse(storage.comments).meta.commentNumber + 1,
+                    content: document.getElementById(`textfieldEntry${id}`).value,
+                    createdAt:"seconds ago",
+                    score: 0,
+                    replyingTo: element.user.username,
+                    user : {
+                       image: {
+                            png: JSON.parse(storage.comments).currentUser.image.png,
+                            webp: JSON.parse(storage.comments).currentUser.image.webp
+                       },
+                       username: JSON.parse(storage.comments).currentUser.username     
+                    },
+                    replies: []
+                }) : null;
+                r++;
+            })
 }
