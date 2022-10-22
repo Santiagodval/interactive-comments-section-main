@@ -13,7 +13,7 @@ storage.length === 0 ? new Promise(resolve => {
 
 
 const starter = () => {
-    fetch('./data.json')
+    fetch('/data.json')
         .then((response) => response.json())
         .then((json) => {
             //sets the comments key of the local storage to the json parameters
