@@ -66,6 +66,9 @@ body {
 .buttons .reply {
   color: hsl(238deg, 40%, 52%);
 }
+.buttons .edit {
+  color: hsl(238deg, 40%, 52%);
+}
 .buttons button {
   display: flex;
   align-items: center;

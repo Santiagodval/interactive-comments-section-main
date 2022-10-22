@@ -9,16 +9,17 @@ storage.length === 0 ? new Promise(resolve => {
       resolve(generateHTML());
     }, 500);
 });
+//TENÉS QUE HACER RELOAD PARA QUE CARGUE EL HTML CUANDO ELIMINAS EL ALMACENAMIENTO
+
 
 const starter = () => {
     fetch('./data.json')
         .then((response) => response.json())
         .then((json) => {
             //sets the comments key of the local storage to the json parameters
-            storage.setItem("comments", JSON.stringify(json));            
-            console.log(json);
+            storage.setItem("comments", JSON.stringify(json));  
             //logs the object in the comments key
-            console.log(JSON.parse(storage.getItem('comments')));
+            generateHTML();
         });
 }
 
@@ -42,7 +43,7 @@ const generateHTML = () => {
         </section>
 
         <div class='buttons'>
-                ${JSON.parse(storage.comments).currentUser.username === element.user.username ? `<button id="delete${element.id}" class="delete"><img src="images/icon-delete.svg">Delete</button>` : ""}
+                ${JSON.parse(storage.comments).currentUser.username === element.user.username ? `<button id="delete${element.id}" class="delete"><img src="images/icon-delete.svg">Delete</button><button id="edit${element.id}" class="edit"><img src="images/icon-edit.svg">Edit</button>` : ""}
                 <button id="reply${element.id}" class='reply'>
                     <img src='images/icon-reply.svg'>
                     Reply
@@ -51,9 +52,9 @@ const generateHTML = () => {
             </div>
 
         <div class='scoreCounter'>
-                <button class='add'><img src='images/icon-plus.svg'></button>
+                <button class='add' id="add${element.id}"><img src='images/icon-plus.svg'></button>
                 ${element.score}
-                <button class='minus'><img src='images/icon-minus.svg'></button>
+                <button class='minus' id="minus${element.id}"><img src='images/icon-minus.svg'></button>
             </div>
         
         <section class='commentTextSection'>
@@ -77,9 +78,8 @@ const generateHTML = () => {
         </section>
     `
     document.getElementById("sendButton").addEventListener("click", addComment);
+    removeListeners();
     createListeners();
-    
-    //    console.log(chatSection.innerHTML);
 }
 
 const generateResponses = (replies) => {
@@ -100,7 +100,7 @@ const generateResponses = (replies) => {
         </section>
 
         <div class='buttons'>
-                ${JSON.parse(storage.comments).currentUser.username === element.user.username ? `<button id="delete${element.id}" class="delete"><img src="images/icon-delete.svg">Delete</button>` : ""}
+                ${JSON.parse(storage.comments).currentUser.username === element.user.username ? `<button id="delete${element.id}" class="delete"><img src="images/icon-delete.svg">Delete</button><button id="edit${element.id}" class="edit"><img src="images/icon-edit.svg">Edit</button>` : ""}
 
                 <button id="reply${element.id}" class='reply'>
                     <img src='images/icon-reply.svg'>
@@ -110,9 +110,9 @@ const generateResponses = (replies) => {
             </div>
 
         <div class='scoreCounter'>
-                <button class='add'><img src='images/icon-plus.svg'></button>
+                <button class='add' id="add${element.id}"><img src='images/icon-plus.svg'></button>
                 ${element.score}
-                <button class='minus'><img src='images/icon-minus.svg'></button>
+                <button class='minus' id="minus${element.id}"><img src='images/icon-minus.svg'></button>
             </div>
 
         <section class='commentTextSection'>
@@ -132,7 +132,6 @@ const generateResponses = (replies) => {
 
 const addComment = () => {
 
-    console.log(storage);
 
     var parsedStorage = JSON.parse(storage.comments);
     var existingComments = parsedStorage.comments;
@@ -164,58 +163,240 @@ const createListeners = () => {
     JSON.parse(storage.comments).comments.forEach(element => {
         if(element.replies.length){
             element.replies.forEach(element2 => {
-                document.getElementById(`delete${element2.id}`) ? document.getElementById(`delete${element2.id}`).addEventListener("click", deleteComment) : null;
-                document.getElementById(`reply${element2.id}`) ? document.getElementById(`reply${element2.id}`).addEventListener("click", replyComment) : null;
+                
+                 document.getElementById(`delete${element2.id}`) ? document.getElementById(`delete${element2.id}`).addEventListener("click", deleteComment) : null;
+                 document.getElementById(`reply${element2.id}`) ? document.getElementById(`reply${element2.id}`).addEventListener("click", replyComment) : null;
+                 document.getElementById(`edit${element2.id}`) ? document.getElementById(`edit${element2.id}`).addEventListener("click", editComment) : null;
 
-                element2.replies.length ? createListeners() : null;
+                 document.getElementById(`minus${element2.id}`) ? document.getElementById(`minus${element2.id}`).addEventListener("click", minusComment) : null;
+                 document.getElementById(`add${element2.id}`) ? document.getElementById(`add${element2.id}`).addEventListener("click", addScoreComment) : null;
+
+
+
+
+                element2.replies.length ? createListeners2(element2) : null;
             })
         }
         document.getElementById(`delete${element.id}`) ? document.getElementById(`delete${element.id}`).addEventListener("click", deleteComment) : null;
         document.getElementById(`reply${element.id}`) ? document.getElementById(`reply${element.id}`).addEventListener("click", replyComment) : null;
+        document.getElementById(`edit${element.id}`) ? document.getElementById(`edit${element.id}`).addEventListener("click", editComment) : null;
+
+        document.getElementById(`minus${element.id}`) ? document.getElementById(`minus${element.id}`).addEventListener("click", minusComment) : null;
+        document.getElementById(`add${element.id}`) ? document.getElementById(`add${element.id}`).addEventListener("click", addScoreComment) : null;
+
     })
 }
 
-const deleteComment = (e) => {
-    let i = 0;
-    let parsedStorage = JSON.parse(storage.comments)
-    parsedStorage.comments.forEach(element => {
-        "delete" + element.id === e.target.id ? parsedStorage.comments.splice(i,1) : null;
+const createListeners2 = (element) =>{
+    document.getElementById(`delete${element.id}`) ? document.getElementById(`delete${element.id}`).addEventListener("click", deleteComment) : null;
+    document.getElementById(`reply${element.id}`) ? document.getElementById(`reply${element.id}`).addEventListener("click", replyComment) : null;
+    document.getElementById(`edit${element.id}`) ? document.getElementById(`edit${element.id}`).addEventListener("click", editComment) : null;
+
+    document.getElementById(`minus${element.id}`) ? document.getElementById(`minus${element.id}`).addEventListener("click", minusComment) : null;
+    document.getElementById(`add${element.id}`) ? document.getElementById(`add${element.id}`).addEventListener("click", addScoreComment) : null;
+
+
+    element.replies.forEach(element2 =>{
+        document.getElementById(`delete${element2.id}`) ? document.getElementById(`delete${element2.id}`).addEventListener("click", deleteComment) : null;
+        document.getElementById(`reply${element2.id}`) ? document.getElementById(`reply${element2.id}`).addEventListener("click", replyComment) : null;
+        document.getElementById(`edit${element2.id}`) ? document.getElementById(`edit${element2.id}`).addEventListener("click", editComment) : null;
+
+        document.getElementById(`minus${element2.id}`) ? document.getElementById(`minus${element2.id}`).addEventListener("click", minusComment) : null;
+        document.getElementById(`add${element2.id}`) ? document.getElementById(`add${element2.id}`).addEventListener("click", addScoreComment) : null;
+
+        element2.replies.length ? createListeners2(element2) : null;
+    })
+}
+
+const removeListeners = () => {
+    JSON.parse(storage.comments).comments.forEach(element => {
         if(element.replies.length){
-            let r = 0;
             element.replies.forEach(element2 => {
-                "delete"+element2.id === e.target.id ? parsedStorage.comments[i].replies.splice(r,1) : null;
-                r++;
+                
+                 document.getElementById(`delete${element2.id}`) ? document.getElementById(`delete${element2.id}`).removeEventListener("click", deleteComment) : null;
+                 document.getElementById(`reply${element2.id}`) ? document.getElementById(`reply${element2.id}`).removeEventListener("click", replyComment) : null;
+                 document.getElementById(`edit${element2.id}`) ? document.getElementById(`edit${element2.id}`).removeEventListener("click", editComment) : null;
+
+                 document.getElementById(`minus${element2.id}`) ? document.getElementById(`minus${element2.id}`).removeEventListener("click", minusComment) : null;
+                 document.getElementById(`add${element2.id}`) ? document.getElementById(`add${element2.id}`).removeEventListener("click", addScoreComment) : null;
+
+                element2.replies.length ? removeListeners2(element2) : null;
             })
-            
         }
-        i++;
-    });
+        document.getElementById(`delete${element.id}`) ? document.getElementById(`delete${element.id}`).removeEventListener("click", deleteComment) : null;
+        document.getElementById(`reply${element.id}`) ? document.getElementById(`reply${element.id}`).removeEventListener("click", replyComment) : null;
+        document.getElementById(`edit${element.id}`) ? document.getElementById(`edit${element.id}`).removeEventListener("click", editComment) : null;
+
+        document.getElementById(`minus${element.id}`) ? document.getElementById(`minus${element.id}`).removeEventListener("click", minusComment) : null;
+        document.getElementById(`add${element.id}`) ? document.getElementById(`add${element.id}`).removeEventListener("click", addScoreComment) : null;
+    })
+}
+
+const removeListeners2 = (element) =>{
+    document.getElementById(`delete${element.id}`) ? document.getElementById(`delete${element.id}`).removeEventListener("click", deleteComment) : null;
+    document.getElementById(`reply${element.id}`) ? document.getElementById(`reply${element.id}`).removeEventListener("click", replyComment) : null;
+    document.getElementById(`edit${element.id}`) ? document.getElementById(`edit${element.id}`).removeEventListener("click", editComment) : null;
+
+    document.getElementById(`minus${element.id}`) ? document.getElementById(`minus${element.id}`).removeEventListener("click", minusComment) : null;
+    document.getElementById(`add${element.id}`) ? document.getElementById(`add${element.id}`).removeEventListener("click", addScoreComment) : null;
+
+    element.replies.forEach(element2 =>{
+        document.getElementById(`delete${element2.id}`) ? document.getElementById(`delete${element2.id}`).removeEventListener("click", deleteComment) : null;
+        document.getElementById(`reply${element2.id}`) ? document.getElementById(`reply${element2.id}`).removeEventListener("click", replyComment) : null;
+        document.getElementById(`edit${element2.id}`) ? document.getElementById(`edit${element2.id}`).removeEventListener("click", editComment) : null;
+
+        document.getElementById(`minus${element2.id}`) ? document.getElementById(`minus${element2.id}`).removeEventListener("click", minusComment) : null;
+        document.getElementById(`add${element2.id}`) ? document.getElementById(`add${element2.id}`).removeEventListener("click", addScoreComment) : null;
+        
+        element2.replies.length ? removeListeners2(element2) : null;
+    })
+}
+
+//delete comments code
+const deleteComment = (e) => {
+    
+    let parsedStorage = JSON.parse(storage.comments);
+
+    let id = parseInt(e.target.id.slice(6));
+
+    parsedStorage.comments.forEach((element, i) => {
+        console.log(element.id);
+        element.id === id ? parsedStorage.comments.splice(i,1) : null;
+
+        element.replies.length > 0 ? deleteResponses(parsedStorage.comments[i].replies, id) : null;
+    })
 
     storage.setItem("comments", JSON.stringify(parsedStorage));
     generateHTML();
     
 }
 
-const replyComment = (e) => {
-    let i = 1;
-    let parsedStorage = JSON.parse(storage.comments);
-    let id = null;
-
-//    parsedStorage.comments[e.target.id.splice(5,e.target.id.length-5)] any way to directly find the comment without go throughout all the array?
-    parsedStorage.comments.forEach(element => {
-        "reply" + element.id === e.target.id ? id=i : null;
-        // parsedStorage.comments[i].replies.push(getReply())
-        if(element.replies.length){
-            element.replies.forEach(element2 => {
-                i++;
-                "reply" + element2.id === e.target.id ? id=i : null;
-            })
-        }
-        
-        i++;
+const deleteResponses = (parsedStorage, id) =>{
+    i=0;
+    parsedStorage.forEach((element, i) => {
+        console.log(parsedStorage)
+        element.id === id ? parsedStorage.splice(i,1) : null;
+        element.replies.length > 0 ? deleteResponses(parsedStorage[i].replies, id) : null;
     })
+}
+
+//edit comments code, bug in the id 4 commentary for some reason
+
+const editComment = (e) => {
+    let parsedStorage = JSON.parse(storage.comments);
+
+    let id = parseInt(e.target.id.slice(4));
+
+    parsedStorage.comments.forEach((element, i) => {
+        element.id === id ? editCommentDOM(id, parsedStorage.comments[i], parsedStorage) : null;
+
+        element.replies.length > 0 ? editReplies(parsedStorage.comments[i].replies, id, parsedStorage) : null;
+    })
+
+    console.log("second")
+}
+
+const editReplies = (parsedStorage , id, eps) =>{
+    i = 0;
+
+    parsedStorage.forEach((element, i) => {
+        element.id === id ? editCommentDOM(id, parsedStorage[i], eps) : null;
+        element.replies.length > 0 ? editReplies(parsedStorage[i].replies, id, eps) : null;
+    })
+}
+
+const editCommentDOM = (id, parsedStorage, eps) => {
+    let comment = document.getElementById(id);
+
+    let newHTML = `
+    <section class="textEntry Replay">
+        <input id='textfieldEntry${id}' value='${parsedStorage.content}' type='textfield'></input>
+        <div class='textEntryUserThings'>
+        <img src='${JSON.parse(storage.comments).currentUser.image.png}'></img>
+        <button class='sendButton' id='sendButton${id}'>Send</button>
+        </div>
+    </section>
+    `;
+
+    comment.innerHTML = newHTML;
+
+    document.getElementById("sendButton"+id).addEventListener("click", () => {
+        parsedStorage.content = document.getElementById(`textfieldEntry${id}`).value;
+        storage.setItem("comments", JSON.stringify(eps));
+
+        generateHTML();
+    });
+}
+//score code
+
+const minusComment = (e) => {
+    let id = parseInt(e.target.id.slice(5));
+    parsedStorage = JSON.parse(storage.comments);
+
+    parsedStorage.comments.forEach((element, i) => {
+        element.id === id ? element.score-- : null;
+        
+        element.replies.length > 0 ? minusComment2(parsedStorage.comments[i].replies, id) : null;
+    })    
+
+    storage.setItem("comments", JSON.stringify(parsedStorage));
+
+    generateHTML();    
+}
+
+const minusComment2 = (parsedStorage, id) => {
+    console.log(parsedStorage)
+    parsedStorage.forEach((element, i) => {
+        element.id === id ? element.score-- : null;
+
+        element.replies.length ? minusComment2(parsedStorage[i].replies, id) : null;
+    })
+}
+
+
+const addScoreComment = (e) => {
+    console.log(e.target.id)
+    let id = parseInt(e.target.id.slice(3));
+    
+    parsedStorage = JSON.parse(storage.comments);
+
+    parsedStorage.comments.forEach((element, i) => {
+        element.id === id ? element.score++ : null;
+        
+        element.replies.length > 0 ? addScoreComment2(parsedStorage.comments[i].replies, id) : null;
+    })    
+
+    storage.setItem("comments", JSON.stringify(parsedStorage));
+
+    generateHTML();    
+}
+
+const addScoreComment2 = (parsedStorage, id) => {
+    
+    parsedStorage.forEach((element, i) => {
+        element.id === id ? element.score++ : null;
+
+        element.replies.length ? addScoreComment2(parsedStorage[i].replies, id) : null;
+    })
+}
+
+//reply comments code
+const replyComment = (e) => {
+    let id = e.target.id.slice(5);
+    
     addReplyEdit(id);
-    parsedStorage.comments
+}
+
+const replyComment2 = (element, i, e) => {
+
+    let r;
+    element.replies.length ? element.replies.forEach(element2 => {
+        i++;
+        "reply" + element2.id === e.target.id ? r = i : null;
+        element2.replies.length ? r = replyComment2(element2, i, e) : null;
+    }) : null;
+
+    return r;
 }
 
 const addReplyEdit = (id) => {
@@ -237,10 +418,8 @@ const addReply = (e) => {
 
     id = parseInt(e.target.id.slice(10));
 
-    console.log(id);
-    let i = 1;
-    parsedStorage.comments.forEach(element => {
-        element.id === id ? parsedStorage.comments[i-1].replies.push({
+    parsedStorage.comments.forEach((element,i) => {
+        element.id === id+1 ? parsedStorage.comments[i].replies.push({
             id:JSON.parse(storage.comments).meta.commentNumber + 1,
             content: document.getElementById(`textfieldEntry${id}`).value,
             createdAt:"seconds ago",
@@ -258,11 +437,9 @@ const addReply = (e) => {
 
 
         if(element.replies.length){
-            let r = 1;
-            element.replies.forEach(element2 =>{
-                console.log(element2.replies)
-                element2.replies ? functionalResponse(r, parsedStorage, element2) : null;
-                element2.id === id ? parsedStorage.comments[i-1].replies[r-1].replies.push({
+            element.replies.forEach((element2,r) =>{
+                element2.replies.length > 0 ? functionalResponse(parsedStorage.comments[i].replies[r], element2) : null;
+                element2.id === id ? parsedStorage.comments[i].replies[r].replies.push({
                     id:JSON.parse(storage.comments).meta.commentNumber + 1,
                     content: document.getElementById(`textfieldEntry${id}`).value,
                     createdAt:"seconds ago",
@@ -277,23 +454,22 @@ const addReply = (e) => {
                     },
                     replies: []
                 }) : null;
-                r++;
+              
             })
             
         }
-        i++;
-
     })
+
+    parsedStorage.meta.commentNumber = parsedStorage.meta.commentNumber +1; 
     storage.setItem("comments", JSON.stringify(parsedStorage));
     generateHTML();
 }
 
-const functionalResponse = (i, parsedStorage, element) => {
-        let r = 1;
-            element.replies.forEach(element2 =>{
-
-                element2.replies ? functionalResponse(r, parsedStorage, element2) : null;
-                element2.id === id ? parsedStorage.comments[i-1].replies[r-1].replies.push({
+const functionalResponse = (parsedStorage, element) => {
+            element.replies.forEach((element2,r) =>{
+                element2.replies ? functionalResponse(parsedStorage.replies[r], element2) : null;
+        
+                element2.id === id ? parsedStorage.replies[r].replies.push({
                     id:JSON.parse(storage.comments).meta.commentNumber + 1,
                     content: document.getElementById(`textfieldEntry${id}`).value,
                     createdAt:"seconds ago",
@@ -308,6 +484,7 @@ const functionalResponse = (i, parsedStorage, element) => {
                     },
                     replies: []
                 }) : null;
-                r++;
             })
 }
+
+storage.length === 0 ? starter() : generateHTML()
