@@ -1,5 +1,5 @@
 var storage = localStorage;
-storage.length === 0 ? new Promise(resolve => {
+storage.comments.length === 0 ? new Promise(resolve => {
     setTimeout(() => {
       resolve(starter());
     }, 500);
