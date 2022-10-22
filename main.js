@@ -473,4 +473,4 @@ const functionalResponse = (parsedStorage, element) => {
             })
 }
 
-storage.length === 0 ? starter() : generateHTML()
+storage.getItem("comments").length === 0 ? starter() : generateHTML()
