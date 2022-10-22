@@ -16,6 +16,7 @@ const starter = () => {
     fetch('./data.json')
         .then((response) => response.json())
         .then((json) => {
+            console.log("fetcheo")
             //sets the comments key of the local storage to the json parameters
             storage.setItem("comments", JSON.stringify(json));  
             //logs the object in the comments key
