@@ -110,7 +110,7 @@ const generateResponses = (replies) => {
             </div>
 
         <div class='scoreCounter'>
-                <button class='add' id="add${element.id}"><img src='images/icon-plus.svg'></button>
+                <button class='add' id="add${element.id}"><img src='images/icon-plus.svg' ></button>
                 ${element.score}
                 <button class='minus' id="minus${element.id}"><img src='images/icon-minus.svg'></button>
             </div>
@@ -257,7 +257,7 @@ const deleteComment = (e) => {
     
     let parsedStorage = JSON.parse(storage.comments);
 
-    let id = parseInt(e.target.id.slice(6));
+    let id = parseInt(e.currentTarget.id.slice(6));
 
     parsedStorage.comments.forEach((element, i) => {
         console.log(element.id);
@@ -285,7 +285,7 @@ const deleteResponses = (parsedStorage, id) =>{
 const editComment = (e) => {
     let parsedStorage = JSON.parse(storage.comments);
 
-    let id = parseInt(e.target.id.slice(4));
+    let id = parseInt(e.currentTarget.id.slice(4));
 
     parsedStorage.comments.forEach((element, i) => {
         element.id === id ? editCommentDOM(id, parsedStorage.comments[i], parsedStorage) : null;
@@ -330,7 +330,7 @@ const editCommentDOM = (id, parsedStorage, eps) => {
 //score code
 
 const minusComment = (e) => {
-    let id = parseInt(e.target.id.slice(5));
+    let id = parseInt(e.currentTarget.id.slice(5));
     parsedStorage = JSON.parse(storage.comments);
 
     parsedStorage.comments.forEach((element, i) => {
@@ -355,8 +355,8 @@ const minusComment2 = (parsedStorage, id) => {
 
 
 const addScoreComment = (e) => {
-    console.log(e.target.id)
-    let id = parseInt(e.target.id.slice(3));
+    console.log(e)
+    let id = parseInt(e.currentTarget.id.slice(3));
     
     parsedStorage = JSON.parse(storage.comments);
 
@@ -382,7 +382,7 @@ const addScoreComment2 = (parsedStorage, id) => {
 
 //reply comments code
 const replyComment = (e) => {
-    let id = e.target.id.slice(5);
+    let id = e.currentTarget.id.slice(5);
     
     addReplyEdit(id);
 }
@@ -392,7 +392,7 @@ const replyComment2 = (element, i, e) => {
     let r;
     element.replies.length ? element.replies.forEach(element2 => {
         i++;
-        "reply" + element2.id === e.target.id ? r = i : null;
+        "reply" + element2.id === e.currentTarget.id ? r = i : null;
         element2.replies.length ? r = replyComment2(element2, i, e) : null;
     }) : null;
 
@@ -416,7 +416,7 @@ const addReplyEdit = (id) => {
 const addReply = (e) => {
     let parsedStorage = JSON.parse(localStorage.comments);
 
-    id = parseInt(e.target.id.slice(10));
+    id = parseInt(e.currentTarget.id.slice(10));
 
     parsedStorage.comments.forEach((element,i) => {
         element.id === id+1 ? parsedStorage.comments[i].replies.push({
