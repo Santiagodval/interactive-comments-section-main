@@ -1,14 +1,5 @@
 var storage = localStorage;
-storage.getItem("comments") === undefined ? new Promise(resolve => {
-    setTimeout(() => {
-      resolve(starter());
-    }, 500);
-}) : 
-    new Promise(resolve => {
-    setTimeout(() => {
-      resolve(generateHTML());
-    }, 500);
-});
+
 //TENÉS QUE HACER RELOAD PARA QUE CARGUE EL HTML CUANDO ELIMINAS EL ALMACENAMIENTO
 
 
