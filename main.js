@@ -1,5 +1,5 @@
 var storage = localStorage;
-storage.comments ? new Promise(resolve => {
+storage.getItem("comments") ? new Promise(resolve => {
     setTimeout(() => {
       resolve(starter());
     }, 500);
