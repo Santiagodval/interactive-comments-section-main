@@ -13,7 +13,7 @@ storage.getItem("comments") === undefined ? new Promise(resolve => {
 
 
 const starter = () => {
-    fetch('/data.json')
+    fetch('./data.json')
         .then((response) => response.json())
         .then((json) => {
             console.log("fetchea")
