@@ -28,7 +28,6 @@ const generateHTML = () => {
 
     chatSection.innerHTML = "";
 
-    console.log("genero HTML")
 
     JSON.parse(storage.comments).comments.forEach(element => {
         chatSection.innerHTML = chatSection.innerHTML + `<section class='comment' 
@@ -260,7 +259,6 @@ const deleteComment = (e) => {
     let id = parseInt(e.currentTarget.id.slice(6));
 
     parsedStorage.comments.forEach((element, i) => {
-        console.log(element.id);
         element.id === id ? parsedStorage.comments.splice(i,1) : null;
 
         element.replies.length > 0 ? deleteResponses(parsedStorage.comments[i].replies, id) : null;
@@ -274,7 +272,6 @@ const deleteComment = (e) => {
 const deleteResponses = (parsedStorage, id) =>{
     i=0;
     parsedStorage.forEach((element, i) => {
-        console.log(parsedStorage)
         element.id === id ? parsedStorage.splice(i,1) : null;
         element.replies.length > 0 ? deleteResponses(parsedStorage[i].replies, id) : null;
     })
@@ -293,7 +290,6 @@ const editComment = (e) => {
         element.replies.length > 0 ? editReplies(parsedStorage.comments[i].replies, id, parsedStorage) : null;
     })
 
-    console.log("second")
 }
 
 const editReplies = (parsedStorage , id, eps) =>{
@@ -345,7 +341,6 @@ const minusComment = (e) => {
 }
 
 const minusComment2 = (parsedStorage, id) => {
-    console.log(parsedStorage)
     parsedStorage.forEach((element, i) => {
         element.id === id ? element.score-- : null;
 
@@ -355,7 +350,6 @@ const minusComment2 = (parsedStorage, id) => {
 
 
 const addScoreComment = (e) => {
-    console.log(e)
     let id = parseInt(e.currentTarget.id.slice(3));
     
     parsedStorage = JSON.parse(storage.comments);
