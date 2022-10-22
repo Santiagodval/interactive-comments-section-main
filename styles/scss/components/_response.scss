@@ -19,5 +19,14 @@
     "responseEntry responseEntry responseEntry"
     "responses responses responses";
 
+    @media (min-width: 1080px) {
+        grid-template-areas: 
+        "scoreCounter commentHeader  buttons"
+        "scoreCounter commentContent commentContent"
+        "responseEntry responseEntry responseEntry"
+        "responses responses responses";
+
+        grid-template-columns: 50px 1fr 1fr;
+    }
     //
 }

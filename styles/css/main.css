@@ -20,7 +20,13 @@
   width: 35px;
   opacity: 100%;
 }
-
+.commentHeader p.youTag {
+  font-size: 0.8rem;
+  border-radius: 3px;
+  padding: 3px 4px 3px 4px;
+  background-color: hsl(238deg, 40%, 52%);
+  color: white;
+}
 .comment {
   padding: 1rem;
   margin: 1rem;
@@ -29,6 +35,12 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-areas: "commentHeader commentHeader commentHeader" "commentContent commentContent commentContent" "scoreCounter buttons buttons" "responseEntry responseEntry responseEntry" "responses responses responses";
+}
+@media (min-width: 1080px) {
+  .comment {
+    grid-template-areas: "scoreCounter commentHeader  buttons" "scoreCounter commentContent commentContent" "responseEntry responseEntry responseEntry" "responses responses responses";
+    grid-template-columns: 50px 1fr 1fr;
+  }
 }
 
 body {
@@ -54,6 +66,21 @@ body {
 .scoreCounter button:nth-child(2) {
   margin-left: 8px;
 }
+@media (min-width: 1080px) {
+  .scoreCounter {
+    flex-direction: column;
+    align-items: center;
+  }
+  .scoreCounter button {
+    border: 0px;
+  }
+  .scoreCounter button:nth-child(1) {
+    margin-right: 0px;
+  }
+  .scoreCounter button:nth-child(2) {
+    margin-left: 0px;
+  }
+}
 
 .buttons {
   grid-area: buttons;
@@ -77,6 +104,9 @@ body {
   border: 0ch;
   background-color: hsl(228deg, 33%, 97%);
 }
+.buttons button:hover {
+  opacity: 50%;
+}
 
 .responses {
   grid-area: responses;
@@ -90,6 +120,12 @@ body {
   border-radius: 7px;
   display: grid;
   grid-template-areas: "commentHeader commentHeader commentHeader" "commentContent commentContent commentContent" "scoreCounter buttons buttons" "responseEntry responseEntry responseEntry" "responses responses responses";
+}
+@media (min-width: 1080px) {
+  .response {
+    grid-template-areas: "scoreCounter commentHeader  buttons" "scoreCounter commentContent commentContent" "responseEntry responseEntry responseEntry" "responses responses responses";
+    grid-template-columns: 50px 1fr 1fr;
+  }
 }
 
 .commentTextSection {
@@ -114,6 +150,9 @@ body {
   border-radius: 10px;
   border: 1px solid gray;
 }
+.textEntry input:focus {
+  border: 2px solid black;
+}
 .textEntry .textEntryUserThings {
   display: flex;
   align-items: center;
@@ -134,6 +173,9 @@ body {
   font-size: 16px;
   background-color: hsl(238deg, 40%, 52%);
   color: white;
+}
+.textEntry .textEntryUserThings .sendButton:hover {
+  opacity: 50%;
 }
 
 * {

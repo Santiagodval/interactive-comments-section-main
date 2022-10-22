@@ -29,5 +29,11 @@
         
         border: 0ch;
         background-color: $Very-light-gray;
+        
+        &:hover{
+            opacity: 50%;
+        }
     }
+
+    
 }

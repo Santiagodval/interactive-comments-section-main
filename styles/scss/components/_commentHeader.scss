@@ -22,8 +22,23 @@
         margin-left: 10px;
         opacity: 70%;
     }
+
     img{
         width: 35px;
         opacity: 100%;
+    }
+
+    p.youTag{
+        font-size: 0.8rem;
+        border-radius: 3px;
+        padding: 3px 4px 3px 4px;
+        background-color: $Moderate-blue;
+        color: white;
+    }
+
+    @media (min-width: 1080px) {
+
+        
+
     }
 }

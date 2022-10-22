@@ -17,6 +17,10 @@
         border-radius: 10px;
 
         border: 1px solid gray;
+
+        &:focus{
+            border: 2px solid black;
+        }
     }
 
     .textEntryUserThings{
@@ -51,6 +55,10 @@
                 background-color: $Moderate-blue;
 
                 color: white;
+
+                &:hover{
+                    opacity: 50%;
+                }
             }
     }
     
