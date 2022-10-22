@@ -1,5 +1,5 @@
 var storage = localStorage;
-storage.getItem("comments") ? new Promise(resolve => {
+storage.getItem("comments") === undefined ? new Promise(resolve => {
     setTimeout(() => {
       resolve(starter());
     }, 500);
@@ -16,7 +16,7 @@ const starter = () => {
     fetch('/data.json')
         .then((response) => response.json())
         .then((json) => {
-            console.log("first")
+            console.log("fetchea")
             //sets the comments key of the local storage to the json parameters
             storage.setItem("comments", JSON.stringify(json));  
             //logs the object in the comments key
