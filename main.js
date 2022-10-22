@@ -473,4 +473,4 @@ const functionalResponse = (parsedStorage, element) => {
             })
 }
 
-Storage.getItem("comments") === undefined ? starter() : generateHTML()
+storage.comments === undefined ? starter() : generateHTML()
